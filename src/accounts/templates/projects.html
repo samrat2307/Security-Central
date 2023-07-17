@@ -1,0 +1,451 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block mycss %}
+
+<style>
+    .backbtn {
+        margin-top: 20px;
+        margin-left: 20px;
+    }
+
+    .logbut {
+        margin-top: 20px;
+        margin-left: 1150px;
+    }
+
+    .main-container {
+        width: 500px;
+        height: fit-content;
+        margin-left: 30%;
+        background-color: whitesmoke;
+        padding: 30px 30px;
+    }
+
+    .solutions {
+        margin: 15px;
+        padding: 25px;
+        padding-bottom: 50px;
+        text-decoration: none;
+        align-items: left;
+        text-align: left;
+        border-radius: 15px;
+        width: 80%;
+        height: 35px;
+        background-color: white;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .loginPopup {
+        position: relative;
+        text-align: center;
+        width: 100%;
+        background-color: #b41d1d;
+    }
+
+    .background-blur {
+        filter: blur(5px);
+    }
+
+    .formPopup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        margin-right: -100px;
+        max-width: 500px;
+        /* Adjust this value to control the maximum width of the form */
+        border: 3px solid #999999;
+        border-radius: 15px;
+        z-index: 9;
+        background-color: #ffffff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .formContainer {
+        padding: 20px;
+        background-color: #f4f4f4;
+        border-radius: 10px;
+        margin: auto;
+        width: 90%;
+        /* Adjust this value to control the width of the form content */
+    }
+
+    .formContainer input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #ffffff;
+        outline: none;
+    }
+
+    .formContainer .btn {
+        padding: 12px 20px;
+        border: none;
+        background-color: #8ebf42;
+        color: #fff;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom: 15px;
+        opacity: 0.8;
+        border-radius: 15px;
+    }
+
+    .formContainer .cancel {
+        background-color: #cc0000;
+    }
+
+    .formContainer .btn:hover,
+    .openButton:hover {
+        opacity: 1;
+    }
+
+    .dropdown-menu {
+        width: 100%;
+        /* Adjust this value to match the width of the formContainer */
+        max-width: 500px;
+        /* Adjust this value to control the maximum width of the dropdown menu */
+    }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div id="maincontainer">
+    <button class=" backbtn btn btn-primary" style="text-decoration:none ; "
+        onclick="location.href='{% url 'solutionproject'%}' ">Back</button>
+    <button class="logbut btn btn-primary" style="text-decoration:none ; "
+        onclick="location.href='{% url 'login_attempt'%}' ">Logout</button>
+
+    <h2 style="text-align: center; color: darkgreen">List of Projects</h2>
+    <div class="main-container" id="prj">
+        <!-- 
+        {% for project in scan_details %} -->
+        <div class="solutions">
+            <input type="radio" name="reason" value="{{ project.name }}"> {{ project.name }}<br> Solution Name: {{
+            project.solution_name }}
+        </div>
+        <!-- {% endfor %} -->
+
+        <button id="newbutton" style="margin: 2px;" type="submit" class="btn btn-warning" data-toggle="button"
+            aria-pressed="false" autocomplete="off" onclick="openForm()">New</button>
+
+        <button id="delete-solution" style="margin: 2px;" type="button" class="btn btn-danger" data-toggle="button"
+            aria-pressed="false" autocomplete="off" onclick="refreshPage()">Delete</button>
+
+        <button id="edit" type="button" style="margin: 2px;" class="btn btn-primary" data-toggle="button"
+            aria-pressed="false" autocomplete="off" onclick="openForm2()">Edit</button>
+    </div>
+
+    {% comment %} New Added for sample {% endcomment %}
+    <div class="loginPopup">
+        <div class="formPopup" id="popupFormAdd">
+            <form method="POST" action="{% url 'addsolution'%}" class="formContainer">
+                {%csrf_token%}
+                <label for="addsolution"><b>Enter Project Name:</b></label>
+                <input id="addsolution" type="text" placeholder="" name="addsolution">
+                <label for="addblackduckname"><b>Enter Blackduck Project Name:</b></label>
+                <input id="addblackduckname" type="text" placeholder="" name="addblackduckname">
+                <div class="dropdown" style="padding:0px">
+                    <button class="btn btn dropdown-toggle"
+                        style="background-color:lightblue;border:2px solid black;width: 100%;height: 50%; margin-top: 0px;"
+                        type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        Solutions
+                    </button>
+                    <div class="dropdown-menu" id="newsolution" aria-labelledby="dropdownMenuButton">
+                        <input type="radio" name="selectedOption" value="option1"> Option 1
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+                <button type="submit" class="btn" id="send-solution">Submit</button>
+                <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="loginPopup">
+        <div class="formPopup" id="popupFormEdit">
+            <form method="POST" class="formContainer">
+                {%csrf_token%}
+                <label for="editsolution"><b>Enter Project Name:</b></label>
+                <input id="editsolution" type="text" placeholder="" name="editsolution">
+                <div class="dropdown" style="padding:0px">
+                    <button class="btn btn dropdown-toggle"
+                        style="background-color:lightblue;border:2px solid black;width: 100%;height: 50%; margin-top: 0px;"
+                        type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        Solutions
+                    </button>
+                    <div class="dropdown-menu" id="newsolution" aria-labelledby="dropdownMenuButton">
+                        <input type="radio" name="selectedOption" value="option1"> Option 1
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+                <button type="submit" class="btn" id="edit-solution">Submit</button>
+                <button type="button" class="btn cancel" onclick="closeForm2()">Close</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+{% block js%}
+
+<script type="text/javascript">
+    // $(".loginPopup").addClass("background-blur");
+
+    // // When the form closes
+    // $(".loginPopup").removeClass("background-blur");
+
+    function refreshPage() {
+        $("#maincontainer").reload(true);
+    }
+    function openForm() {
+        document.getElementById("popupFormAdd").style.display = "block";
+    }
+    function openForm2() {
+        document.getElementById("popupFormEdit").style.display = "block";
+    }
+    function closeForm() {
+        document.getElementById("popupFormAdd").style.display = "none";
+    }
+    function closeForm2() {
+        document.getElementById("popupFormEdit").style.display = "none";
+    }
+
+    $(document).ready(function () {
+
+        // Perform an AJAX request to retrieve the project details
+        $.ajax({
+            url: "http://127.0.0.1:8000/showprojects",  // Replace with your actual AJAX endpoint URL
+            method: 'GET',
+            success: function (response) {
+                console.log(response);
+                var projectList = response.scan_details;
+                var html = '';
+                for (var i = 0; i < projectList.length; i++) {
+                    var project = projectList[i];
+                    var $projectDiv = $('<div class="solutions"></div>');
+                    var $radioBtn = $('<input type="radio" name="reason" value="' + project.name + '">');
+                    var $projectName = $('<span>' + project.name + '</span>');
+                    var $solutionName = $('<span>Solution Name: ' + project.solution_name + '</span>');
+                    $projectDiv.append($radioBtn, $projectName, '<br>', $solutionName);
+                    $('#prj').append($projectDiv);
+                    $('#prj').append($('#newbutton'));
+                    $('#prj').append($('#delete-solution'));
+                    $('#prj').append($('#edit'));
+                }
+            },
+            error: function () {
+                console.log('Error occurred during AJAX request.');
+            }
+        });
+
+        $.ajax({
+            url: "http://127.0.0.1:8000/sol",
+            success: function (result) {
+                let optionsHtml = "";
+                console.log(result);
+
+                $.each(result["solution"], function (index, solution) {
+                    optionsHtml += `<a class="dropdown-item" href="#"><input type="radio" name="selectedOption" value="${solution}">${solution}</a>`;
+                });
+
+                $("#newsolution.dropdown-menu").html(optionsHtml);
+
+            },
+        });
+
+
+        $("#popupFormAdd").submit(function (event) {
+            console.log("I n the from in side the ready function");
+            event.preventDefault();
+            captureFormValues();
+            console.log("After capture")
+        });
+        $("#popupFormEdit").submit(function (event) {
+            console.log("XXXX");
+            event.preventDefault();
+            captureFormValuesForEdit();
+            console.log("After capture")
+        });
+    });
+
+
+
+    function captureFormValues() {
+        const projectName = $("#addsolution").val();
+        const blackduckprojectName = $("#addblackduckname").val();
+        const selectedSolution = $("input[name='selectedOption']:checked").val();
+
+        // Check if project name is empty
+        if (projectName.trim() === "") {
+            alert("Please enter a project name.");
+            $("#addsolution").val("").focus(); // Clear the field and set focus
+            return; // Stop further processing
+        }
+        if (blackduckprojectName.trim() === "") {
+            alert("Please enter a blackduckproject name.");
+            $("#addblackduckname").val("").focus(); // Clear the field and set focus
+            return; // Stop further processing
+        }
+        // Check if a solution is selected
+        if (selectedSolution === undefined) {
+            alert("Please select a solution.");
+            $("#addsolution").val(""); // Clear the project name field
+            return; // Stop further processing
+        }
+
+        // Use 'projectName' and 'selectedSolution' for further processing or submission
+        console.log("Project Name:", projectName);
+        console.log("Selected Solution:", selectedSolution);
+
+        // Reset the form
+        const postData = {
+            projectName: projectName,
+            blackduckprojectName: blackduckprojectName,
+            selectedSolution: selectedSolution,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+
+        // Make the POST request
+        $.ajax({
+            url: "http://127.0.0.1:8000/showprojects",
+            method: "POST",
+            data: postData,
+            success: function (response) {
+                if (response.success) {
+                    // Project added successfully
+                    alert(response.message);
+                    window.location.reload(true); // Refresh the page
+                } else {
+                    // Project addition failed
+                    alert("Failed to add project. Please try again.");
+                }
+            },
+            error: function () {
+                console.log('Error occurred during the POST request.');
+            }
+        });
+        $("form")[0].reset();
+    }
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+    $("#delete-solution").click(function () {
+        var selectedRadio = $("input[name='reason']:checked");
+        var csrftoken = getCookie('csrftoken');
+        if (selectedRadio.length > 0) {
+            var selectedProjectName = selectedRadio.val();
+            var selectedSolutionName = selectedRadio.siblings('span:last').text().replace('Solution Name: ', '');
+            console.log('Selected Project:', selectedProjectName);
+            console.log('Selected Solution:', selectedSolutionName);
+
+            var del_data = {
+                selectedProjectName: selectedProjectName,
+                selectedSolutionName: selectedSolutionName,
+                csrfmiddlewaretoken: csrftoken
+            };
+            var del_url = "http://127.0.0.1:8000/showprojects?selectedProjectName=" + encodeURIComponent(selectedProjectName) + "&selectedSolutionName=" + encodeURIComponent(selectedSolutionName);
+            // console.log(csrftoken);
+            $.ajax({
+                url: del_url,
+                method: 'DELETE',
+                data: del_data,
+                beforeSend: function (xhr, settings) {
+                    console.log("int crrsfs");
+                    // Set the CSRF token in the request headers
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
+                success: function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        // Project added successfully
+                        alert(response.message);
+                        window.location.reload(true); // Refresh the page
+                    } else {
+                        // Project addition failed
+                        alert("Failed to add project. Please try again.");
+                    }
+                },
+                error: function () {
+                    console.log('Error occurred during the POST request.');
+                }
+            });
+        }
+    });
+
+    function captureFormValuesForEdit() {
+
+        var selectedRadio = $("input[name='reason']:checked");
+        var newProjectName = $("#editsolution").val();
+        var csrftoken = getCookie('csrftoken');
+        if (selectedRadio.length > 0) {
+            var selectedProjectNames = selectedRadio.val();
+            var selectedSolutionNames = selectedRadio.siblings('span:last').text().replace('Solution Name: ', '');
+            console.log('Selected Project:', selectedProjectNames);
+            console.log('Selected Solution:', selectedSolutionNames);
+
+            var edit_url = "http://127.0.0.1:8000/showprojects?selectedProjectNames=" + encodeURIComponent(selectedProjectNames) + "&selectedSolutionNames=" + encodeURIComponent(selectedSolutionNames) + "&newProjectName=" + encodeURIComponent(newProjectName);
+
+            $.ajax({
+                url: edit_url,
+                method: "PUT",
+                data: { csrfmiddlewaretoken: csrftoken },
+                beforeSend: function (xhr, settings) {
+                    // Set the CSRF token in the request headers
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Project edited successfully
+                        alert(response.message);
+                        window.location.reload(true); // Refresh the page
+                    } else {
+                        // Project editing failed
+                        alert("Failed to edit project. Please try again.");
+                    }
+                },
+                error: function () {
+                    console.log('Error occurred during the PUT request.');
+                }
+            });
+        }
+
+        $("form")[0].reset();
+
+    }
+</script>
+{% endblock%}
+
+{% endblock %}

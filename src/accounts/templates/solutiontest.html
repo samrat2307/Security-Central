@@ -1,0 +1,250 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block mycss %}
+
+<style>
+    .logbut {
+        margin-top: 20px;
+        margin-left: 150px;
+        /* border-radius: 10px; */
+        /* padding: 5px; */
+        /* border: white; */
+        /* background-color: rgb(10, 109, 222); */
+        /* color: white; */
+        /* text-decoration: none; */
+    }
+
+    .main-container {
+        width: 500px;
+        height: fit-content;
+        /* margin-top: 20px; */
+        margin-left: 30%;
+        background-color: whitesmoke;
+        /* border-radius: 5px; */
+        padding: 30px 30px;
+    }
+
+    .solutions {
+        margin: 15px;
+        padding: 25px;
+        padding-bottom: 50px;
+        text-decoration: none;
+        align-items: left;
+        text-align: left;
+        border-radius: 15px;
+        width: 80%;
+        height: 35px;
+        background-color: white;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .loginPopup {
+        position: relative;
+        text-align: center;
+        width: 100%;
+        background-color: #b41d1d;
+    }
+
+    .formPopup {
+        display: none;
+        position: fixed;
+        left: 45%;
+        top: 5%;
+        transform: translate(-30%, 5%);
+        border: 3px solid #999999;
+        border-radius: 15px;
+        z-index: 9;
+    }
+
+    #popupForm {
+        background-color: #948c8c;
+    }
+
+    .formContainer {
+        max-width: 300px;
+        padding: 20px;
+        background-color: #d7dad3;
+        border-radius: 10px;
+    }
+
+    .formContainer input[type=text] {
+        width: 100%;
+        padding: 15px;
+        margin: 5px 0 20px 0;
+        border: none;
+        background: #e3eef0;
+    }
+
+    .formContainer input[type=text]:focus {
+        background-color: rgb(185, 178, 178);
+        outline: none;
+    }
+
+    .formContainer .btn {
+        padding: 12px 20px;
+        border: none;
+        background-color: #8ebf42;
+        color: #fff;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom: 15px;
+        opacity: 0.8;
+        border-radius: 15px;
+    }
+
+    .formContainer .cancel {
+        background-color: #cc0000;
+    }
+
+    .formContainer .btn:hover,
+    .openButton:hover {
+        opacity: 1;
+    }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div id="maincontainer">
+    <button class="logbut btn btn-primary" style="text-decoration:none ; "
+        onclick="location.href='{% url 'login_attempt'%}' ">Logout</button>
+
+    <div class="main-container">
+        <h2 style="text-align: center; color: darkgreen">List of Solutions</h2>
+
+        {% for album in Solution_List %}
+        <div class="solutions">
+            <input type="radio" name="reason" value="{{album}}"> {{album}}<br>
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-warning" data-toggle="button" aria-pressed="false" autocomplete="off"
+            onclick="openForm()">New</button>
+
+        <button id="delete-solution" type="button" class="btn btn-danger" data-toggle="button" aria-pressed="false"
+            autocomplete="off" onclick="refreshPage()">Delete</button>
+
+        <button id="edit-solution" type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
+            autocomplete="off" onclick="openForm2()">Edit</button>
+    </div>
+
+    <div class="loginPopup">
+        <div class="formPopup" id="popupForm">
+            <form method="POST" class="formContainer">
+                {%csrf_token%}
+                <label for="Solution"><b>Enter Solution Name:</b></label>
+                <input id="Solution" type="text" placeholder="" name="solution">
+                <button type="button" class="btn" id="send-solution" 
+                    onclick="location.href='{% url 'submitsolution'%}' refreshPage() ">Submit</button>
+                <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+            </form>
+        </div>
+    </div>
+
+{% comment %} Edit solutions {% endcomment %}
+    <div class="loginPopup">
+        <div class="formPopup" id="popupForm2">
+            <form method="POST" class="formContainer">
+                {%csrf_token%}
+                <label for="tolution"><b>Enter Solution Name:</b></label>
+                <input id="tolution" type="text" placeholder="" name="tolution">
+                <button type="button" class="btn" id="edit-tolution" 
+                    onclick="location.href='{% url 'editsolutions'%}' refreshPage() ">Submit</button>
+                <button type="button" class="btn cancel" onclick="closeForm2()">Close</button>
+            </form>
+        </div>
+    </div>
+    
+</div>
+
+
+{% block js%}
+<script type="text/javascript">
+
+    function refreshPage() {
+        $("#maincontainer").reload(true);
+    }
+    function openForm() {
+        document.getElementById("popupForm").style.display = "block";
+    }
+    function openForm2() {
+        document.getElementById("popupForm2").style.display = "block";
+    }
+    function closeForm() {
+        document.getElementById("popupForm").style.display = "none";
+    }
+    function closeForm2() {
+        document.getElementById("popupForm2").style.display = "none";
+    }
+
+    $("#delete-solution").click(function () {
+        var solt = $("input[name='reason']:checked").val();
+        del_data = { sol: solt, csrfmiddlewaretoken: '{{ csrf_token }}' }
+        $.ajax({
+            url: "{% url 'submitsolutions' %}",
+            method: "POST",
+            data: del_data,
+            success: function (del_data) {
+                $('#maincontainer').html(data);
+            },
+        });
+        console.log(solt);
+        solt = '';
+    });
+
+    $("#send-solution").click(function () {
+        console.log("Save button clickded");
+        let nm = $("#Solution").val();
+        if (nm == "") {
+            console.log("please enter name");
+        }
+        console.log(nm);
+        mydata = {
+            name: nm,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        }
+        $.ajax({
+            url: "{% url 'submitsolution' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                $('#maincontainer').html(data);
+            },
+        });
+        $('#Solution').val('');
+    });
+
+
+    $("#edit-tolution").click(function () {
+        let edit = $("input[name='reason']:checked").val();
+        var nms = $("#tolution").val();
+        mydata = {
+            editsol: edit,
+            newname:nms,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        }
+        $.ajax({
+            url: "{% url 'editsolutions' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                $('#maincontainer').html(data);
+            },
+        });
+        console.log("Exited from ajax")
+       edit='';
+    });
+
+
+</script>
+{% endblock%}
+
+
+{% endblock %}

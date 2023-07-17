@@ -1,0 +1,865 @@
+{% extends './base.html' %}
+{% comment %} {% block title %}View All Farmer's{% endblock title %} {% endcomment %}
+{% load static %}
+
+{% block mycss %}
+<style>
+    select {
+        background: none;
+        appearance: none !important;
+        background-size: 25px 25px !important;
+        background-position: 99% 50% !important;
+    }
+</style>
+{% endblock mycss %}
+
+{% block content %}
+<div id="spinner" class="d-flex align-items-center justify-content-evenly" style="margin: 20%;">
+    <img src="{% static 'loading.gif' %}" alt="Loading..."></img>
+    <img src="{% static 'loading.gif' %}" alt="Loading..."></img>
+    <img src="{% static 'loading.gif' %}" alt="Loading..."></img>
+</div>
+
+
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Irrigations</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/"></a></li>
+        <li class="breadcrumb-item active"></li>
+    </ol>
+
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col">
+                <select style="font-size: 1.2rem;" id="selectFarmer" class="form-select "
+                    aria-label="Default select example" onchange="getPlot(this)">
+                    <option disabled selected>Select Farmer</option>
+                </select>
+            </div>
+
+
+
+            <div class="col">
+                <select style="font-size: 1.2rem" id="selectPlot" class="form-select "
+                    aria-label="Default select example">
+                    <option disabled selected>Select Plot</option>
+                </select>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    Add Irrigation
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <input style="visibility:hidden;" class="mt-5" type="text" id="myInput" onkeyup="myFunction()"
+                    placeholder="Search by farmerId..." title="Type in a farmerId">
+            </div>
+            <div class="col">
+                <input style="visibility:hidden;" class="mt-5" type="text" id="myInput1" onkeyup="myFunction1()"
+                    placeholder="Search by plot..." title="Type in a plot">
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function myFunction(take_it) {
+            console.log("hiiii");
+            console.log(take_it)
+            var input, filter, table, tr, td, i, txtValue;
+            input = take_it//document.getElementById("myInput");
+            filter = input.toUpperCase()//input.value.toUpperCase();
+            table = document.getElementById("datatablesSimple");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction1() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput1");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("Product-Records");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[4];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+
+   
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="Product-Records" class="table table-striped table table-bordered mb-5">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">fertilizer</th>
+                            <th scope="col">quantity</th>
+                            <th scope="col">imageUrl</th>
+                            <th scope="col">MHCODE</th>
+                            <th scope="col">status</th>
+                            <th scope="col">completed date</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
+    </div>
+   
+
+    <div class="container-fluid px-4">
+
+        <div class="container">
+        </div>
+        <div class="card mb-2">
+
+        </div>
+        <div class="card mb-2">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Irrigation Works
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple" style="overflow-x: scroll;">
+                    <thead>
+                        <tr>
+
+                            <th scope="col">fertilizer</th>
+                            <th scope="col">quantity</th>
+                            <th scope="col">imageUrl</th>
+                            <th scope="col">MHCODE</th>
+                            <th scope="col">status</th>
+                            <th scope="col">completed date</th>
+                            <th scope="col">Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- Add Product Modal -->
+    <div class="container">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+            data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Irrigation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addSpray" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" id="Myid" value="">
+                            <div class="form-group mb-3">
+                                <label for="p-fertilizer">fertilizer</label>
+                                <input type="text" class="form-control" id="p-fertilizer" name="fertilizer"
+                                    placeholder="fertilizer" value="" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-quantity">Quantity</label>
+                                <input type="text" class="form-control" id="p-quantity" name="quantity"
+                                    placeholder="quantity" value="" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-imageUrl">imageUrl</label>
+                                <input type="file" class="form-control" id="p-imageUrl" name="imageUrl" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-imageId">MHCode</label>
+                                <input type="text" class="form-control" id="p-imageId" name="imageId"
+                                    placeholder="imageId" value="" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-status">Status</label>
+                                <input type="text" class="form-control" id="p-status" name="is_completed"
+                                    placeholder="status" value="" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-date">completed date</label>
+                                <input type="date" class="form-control" id="p-date" name="completed_date"
+                                    placeholder="completed_date" value="" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-farmerId">farmerId</label>
+                                <input type="text" class="form-control" id="p-farmerId" name="farmerId"
+                                    placeholder="farmerId" value="" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-sm" id="p-create">Save
+                                    changes</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div class="container">
+        <div class="modal fade" id="editSpray" tabindex="-1" data-backdrop="static" data-keyboard="false"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editSpray" action="" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" id="Myid" value="">
+                            <div class="form-group mb-3">
+                                <label for="p-fertilizer">fertilizer</label>
+                                <input type="text" class="form-control" id="p-fertilizer" name="fertilizer"
+                                    placeholder="fertilizer" value="" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-quantity">Quantity</label>
+                                <input type="text" class="form-control" id="p-quantity" name="quantity"
+                                    placeholder="quantity" value="" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-imageUrl">imageUrl</label>
+                                <input type="file" class="form-control" id="p-imageUrl" name="imageUrl" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-imageId">MHCode</label>
+                                <input type="text" class="form-control" id="p-imageId" name="imageId"
+                                    placeholder="imageId" value="" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-status">Status</label>
+                                <input type="text" class="form-control" id="p-status" name="is_completed"
+                                    placeholder="status" value="" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-date">completed date</label>
+                                <input type="date" class="form-control" id="p-date" name="completed_date"
+                                    placeholder="completed_date" value="" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-farmerId">farmerId</label>
+                                <input type="text" class="form-control" id="p-farmerId" name="farmerId"
+                                    placeholder="farmerId" value="" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-sm" id="p-create">Save
+                                    changes</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Product Modal -->
+    <div class="container">
+        <div class="modal fade" id="deleteSpray" tabindex="-1" data-backdrop="static" data-keyboard="false"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="deleteSpray" action="">
+                            <input type="hidden" id="Myid" name="id" value="">
+                            <p>Are you sure you want to delete this Product?</p>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-danger btn-sm" id="p-delete">Delete
+                                    Product</button>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    data-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Edit Product Modal -->
+    <div class="container">
+        <div class="modal fade" id="showSpray" tabindex="-1" data-backdrop="static" data-keyboard="false"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="showSpray" action="">
+                            {% csrf_token %}
+                            <input type="hidden" id="Myid" value="">
+                            <div class="form-group mb-3">
+                                <label for="p-fertilizer">fertilizer</label>
+                                <input type="text" class="form-control" id="p-fertilizer" name="fertilizer"
+                                    placeholder="fertilizer" value="" disabled>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-quantity">Quantity</label>
+                                <input type="text" class="form-control" id="p-quantity" name="quantity"
+                                    placeholder="quantity" value="" disabled>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-imageUrl">imageUrl</label>
+                                <input type="file" class="form-control" id="p-imageUrl" name="imageUrl" disabled>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-imageId">MHCode</label>
+                                <input type="text" class="form-control" id="p-imageId" name="imageId"
+                                    placeholder="imageId" value="" disabled>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-status">Status</label>
+                                <input type="text" class="form-control" id="p-status" name="is_completed"
+                                    placeholder="status" value="" disabled>
+
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-date">completed date</label>
+                                <input type="date" class="form-control" id="p-date" name="completed_date"
+                                    placeholder="completed_date" value="" disabled>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p-farmerId">farmerId</label>
+                                <input type="text" class="form-control" id="p-farmerId" name="farmerId"
+                                    placeholder="farmerId" value="" disabled>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-sm" id="p-create">Save
+                                    changes</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
+    integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
+    crossorigin="anonymous"></script>
+<script>
+
+    // function getCookie(name) {
+    //     let cookieValue = null;
+    //     if (document.cookie && document.cookie !== '') {
+    //         const cookies = document.cookie.split(';');
+    //         for (let i = 0; i < cookies.length; i++) {
+    //             const cookie = cookies[i].trim();
+    //             // Does this cookie string begin with the name we want?
+    //             if (cookie.substring(0, name.length + 1) === (name + '=')) {
+    //                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     return cookieValue;
+    // }
+    // const csrftoken = getCookie('csrftoken');
+
+    // function csrfSafeMethod(method) {
+    //     // these HTTP methods do not require CSRF protection
+    //     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    // }
+
+
+    let selectFarmer = document.getElementById('selectFarmer');
+    let selectPlot = document.getElementById('selectPlot');
+
+    $(document).ready(function () {
+
+        let url = "http://wce22.feweather.com:8085/api/farmer/fetchAll/"
+        load(url);
+
+    });
+
+    async function load(url) {
+        let obj = await (await fetch(url)).json();
+        if (selectFarmer.options.length == 1) {
+            for (let i = 0; i < obj.length; i++) {
+                let newOption = new Option(obj[i].userId);
+                selectFarmer.add(newOption)
+            }
+        }
+    }
+    async function getPlot(e) {
+        var userId = e.options[e.selectedIndex].value;
+        // console.log(userId);
+
+        let url = "http://wce22.feweather.com:8085/api/plots/" + userId;
+        let obj = await (await fetch(url)).json();
+        // console.log(obj.length)
+        if (obj.length !== 0 && selectPlot.options.length == 1) {
+            // console.log(object)
+            for (let i = 0; i < obj.length; i++) {
+                let newOption = new Option(obj[i]);
+                selectPlot.add(newOption)
+                // console.log(obj[i])
+            }
+        }
+    }
+
+    selectFarmer.addEventListener('click', (e) => {
+        selectPlot.options.length = 1;
+    })
+
+
+    selectPlot.addEventListener('click', async (e) => {
+        console.log("hello")
+        let i = selectPlot.value.search(/-/);
+        let MHCode = selectPlot.value.substring(i + 1);
+        myFunction(MHCode);
+    });
+
+
+
+    //All Products API
+    $.ajax({
+        url: "http://wce22.feweather.com:8085/api/irrigations/fetchAll/",
+        dataType: "json",
+        success: function (response) {
+            let trHTML = ``;
+            $.each(response, function (i, item) {
+                trHTML += `<tr><td class="d-sm-table-cell text-center">`
+                    + item.fertilizer + `</td><td class="d-sm-table-cell text-center">`
+                    + item.quantity + `</td><td class="d-sm-table-cell text-center"><a class="btn btn-secondary btn-sm" href=`
+                    + `http://wce22.feweather.com:8085` + item.imageUrl + `><i class="fa fa-eye"></i></a></td><td class="d-sm-table-cell text-center">`
+                    + item.imageId + `</td><td class="d-sm-table-cell text-center">`
+                    + item.is_completed + `</td><td class="d-sm-table-cell text-center">`
+                    // + item.farmerId 
+                    //  + "</td><td>"
+                    + item.completed_date
+                    + `</td><td class="d-sm-table-cell text-center"> 
+           <button class='btn btn-secondary btn-sm delete' id =`+ item.irr_id + ` data-toggle='modal' data-target='#deleteSpray'><i class="fas fa-trash"></i></i></button> <button class='btn btn-secondary btn-sm show' id =` + item.irr_id + ` data-toggle='modal' data-target='#showSpray'><i class="fa fa-eye"></i></button>   <button class='btn btn-secondary btn-sm update' id =` + item.irr_id + ` data-toggle='modal' data-target='#editSpray'><i class="fa fa-pen"></i></button>
+           </td></tr>`;
+            });
+            $('#datatablesSimple').append(trHTML);
+
+        }
+    });
+
+    $('#create').click(function () {
+        $("#add-Product").trigger('reset');
+    });
+
+
+
+
+
+    $(function () {
+        $('#addSpray').on('submit', function (e) {
+            e.preventDefault();
+            var data = new FormData(this);
+
+            var action = function (e) {
+                console.log(e);
+                location.reload();
+            };
+
+            $.ajax({
+
+                url: "http://wce22.feweather.com:8085/api/irrigations/add/",
+                data: data,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: action,
+                error: action
+            });
+
+        });
+
+    }(jQuery));
+
+
+
+
+
+    $('#datatablesSimple').on('click', '.update', function (e) {
+        e.preventDefault();
+
+        let id = $(this).attr('id');
+        $('input[id=Myid]').val(id);
+
+        let myurl = "http://wce22.feweather.com:8085/api/irrigations/" + id + "/";
+
+        $("#p-fertilizer").change(function () {
+            $('input[name=fertilizer]').val($(this).val());
+        });
+        $("#p-quantity").change(function () {
+            $('input[name=quantity]').val($(this).val());
+        });
+
+        /*
+        $( "#p-imageUrl" ).change(function() {
+            $('input[name=imageUrl]').val($(this).val());
+        });
+    
+        */
+        $("#p-status").change(function () {
+            $('input[name=status]').val($(this).val());
+        });
+
+        $.ajax({
+            async: true,
+            url: myurl,
+            method: 'GET',
+            success: function (result) {
+                $('input[name="fertilizer"]').val(result.fertilizer);
+                $('input[name="quantity"]').val(result.quantity);
+                //$('input[name="imageurl"]').val(result.imageUrl);
+                $('input[name="status"]').val(result.status);
+            }
+        });
+
+    });
+
+
+
+
+
+
+    $(function () {
+        $('#editSpray').on('submit', function (e) {
+            e.preventDefault();
+
+            e.preventDefault();
+
+            let id = $("#Myid").attr("value");
+            console.log(id);
+
+            let myurl = "http://wce22.feweather.com:8085/api/irrigations/edit/" + id + "/";
+
+            $.ajax({
+                type: 'PATCH',
+                url: myurl,
+                data: $("#editSpray :input").serializeArray(),
+                dataType: "json",
+                success: function (data) {
+                    alert("irrigation Updated!");
+                    location.reload();
+                },
+                error: function (data) {
+                    // alert("soilwork Not Updated!");
+                    location.reload();
+                }
+            });
+
+
+        });
+    });
+
+
+
+
+    $('#datatablesSimple').on('click', ".delete", function (e) {
+        e.preventDefault();
+
+        let id = $(this).attr('id');
+        $('input[id=Myid]').val(id);
+        console.log(id)
+
+        let myurl = "http://wce22.feweather.com:8085/api/irrigations/" + id + "/";
+
+        $.ajax({
+            async: true,
+            url: myurl,
+            method: 'GET',
+            success: function (result) {
+                $('input[name="id"]').val(result.id);
+            }
+        });
+
+    });
+
+
+
+
+
+
+
+    $(function () {
+        $('#deleteSpray').on('submit', function (e) {
+            e.preventDefault();
+
+            let id = $("#Myid").attr("value");
+            console.log(id);
+
+            let myurl = "http://wce22.feweather.com:8085/api/irrigations/delete/" + id + "/";
+            console.log(myurl);
+
+            $.ajax({
+                async: true,
+                url: myurl,
+                method: 'DELETE',
+                success: function (result) {
+                    location.reload();
+                },
+                error: function (result) {
+                    alert("irrigation Not Deleted!");
+                    location.reload();
+                }
+            });
+
+        });
+    });
+
+
+
+
+    $('#datatablesSimple').on('click', '.show', function (e) {
+        e.preventDefault();
+
+        let id = $(this).attr('id');
+        $('input[id=Myid]').val(id);
+
+        let myurl = "http://wce22.feweather.com:8085/api/irrigations/" + id + "/";
+
+        $("#p-category").change(function () {
+            $('input[name=category]').val($(this).val());
+        });
+        $("#p-fertilizer").change(function () {
+            $('select[name=fertilizer]').val($(this).val());
+        });
+        $("#p-quantity").change(function () {
+            $('input[name=quantity]').val($(this).val());
+            console.log("a........");
+        });
+        /*
+            
+             $( "#p-imageUrl" ).change(function() {
+                $('input[name=imageUrl]').val($(this).val());
+           
+            });
+        
+            */
+
+
+        $("#p-status").change(function () {
+            $('input[name=is_completed]').val($(this).val());
+        });
+
+        $("#p-imageId").change(function () {
+            $('input[name=imageId]').val($(this).val());
+        });
+
+        $("#p-date").change(function () {
+            $('input[name=completed_date]').val($(this).val());
+        });
+
+        $("#p-farmerId").change(function () {
+            $('input[name=farmerId]').val($(this).val());
+        });
+
+
+        $.ajax({
+            async: true,
+            url: myurl,
+            method: 'GET',
+            success: function (result) {
+                $('input[name="category"]').val(result.category);
+                $('input[name="fertilizer"]').val(result.fertilizer);
+                $('input[name="quantity"]').val(result.quantity);
+                // $('input[name="imageUrl"]').val(result.imageUrl);
+                $('input[name="is_completed"]').val(result.is_completed);
+                $('input[name="imageId"]').val(result.imageId);
+                $('input[name="completed_date"]').val(result.completed_date);
+                $('input[name="farmerId"]').val(result.farmerId);
+            }
+        });
+
+    });
+
+
+
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<!-- Font awesome kit code  -->
+<script src="https://kit.fontawesome.com/3a44b91f72.js" crossorigin="anonymous"></script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<!-- <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" /> -->
+<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" /> -->
+<!-- <link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet" /> -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<script>
+
+
+    let oTable;
+    $(document).ready(function () {
+        oTable = $('#myTable').DataTable({
+            paging: false,
+            bFilter: true,
+            ordering: true,
+            searching: true,
+            dom: 't',
+            "aoColumnDefs": [
+                { "sClass": "my_class", "aTargets": [0] }
+            ]
+        });
+
+        setTimeout(() => {
+            $('#spinner').addClass("d-none");
+            $('#main').removeClass('d-none')
+        }, 1000);
+
+
+    });
+
+    $('#myInputTextField').keyup(function () {
+        oTable.search($(this).val()).draw();
+    })
+
+    $('#entries').click(function () {
+        var e = document.getElementById("ddlViewBy");
+        var value = e.value;
+        var text = e.options[e.selectedIndex].text;
+        var oSettings = oTable.fnSettings();
+        oSettings._iDisplayLength = text;
+        oTable.fnDraw();
+    });
+
+    async function updateFarmerProfile(e) {
+        let str = e.id;
+        str = str.replaceAll("'", '"')
+        str = str.replaceAll(" None,", '"None",')
+
+        console.log(str)
+
+        let farmer = JSON.parse(str);
+
+        farmer.village = $(`#${farmer.userId}village`).val()
+        farmer.consultantName = $(`#${farmer.userId}consultantName`).val()
+        farmer.profileUrl = $(`#${farmer.userId}profileUrl`).val()
+        farmer.farmMap = $(`#${farmer.userId}farmMap`).val()
+        farmer.email = $(`#${farmer.userId}email`).val()
+        farmer.mobileNumber = $(`#${farmer.userId}mobileNumber`).val()
+
+        let url = "http://wce22.feweather.com:8085/api/farmer/edit/" + farmer.userId;
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(farmer)
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            // this is the data we get after putting our data,
+            if (data.error) {
+                console.log(data.error)
+                let obj = data.error
+                alert(obj[Object.keys(obj)[0]])
+            }
+            else {
+                alert("Data Successfully Added!!!");
+                location.reload();
+            }
+        }
+        ).catch(err => console.log(err))
+
+    }
+
+
+
+</script>
+
+{% endblock content %}

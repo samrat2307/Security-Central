@@ -1,0 +1,139 @@
+{% extends "base.html"%}
+
+{% load static %}
+{% block mycss %}
+
+<style>
+    * {margin: 0;
+        padding: 0;}
+   
+   
+   #text{
+       padding-top: 55px;
+   }
+   
+   #mytext{
+       position: static;
+   }
+   
+   .navbarcolor{
+       background-color: white !important;
+   }
+   .navbar{
+       height: 90px !important;
+       padding-top: 0px !important;
+       padding-bottom: 0px !important;
+   }
+   .place{
+   
+       position: absolute;
+       margin-left: 5px;
+       padding-top: 5px;
+       border-radius: 5px;
+   }
+    
+   .sec-table {
+      padding:0rem !important;
+     }
+   
+     table,
+   table td {
+     border: 1px solid #cccccc;
+   }
+   td {
+       height: 30px;
+       width: 160px;
+       text-align: center;
+       vertical-align: middle;
+     }
+</style>
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<nav class="navbar  justify-content-between navbarcolor">
+    <div id="text">
+
+        <textarea id="mytext" rows="1" cols="18"></textarea>
+        <span class="place">
+            <select id="dropdown">
+                <option value=""></option>
+                <option value="text1">text1</option>
+                <option value="text2">text2</option>
+                <option value="text3">text3</option>
+                <option value="text4">text4</option>
+            </select>
+        </span>
+
+    </div>
+    <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</nav>
+
+
+<table  style="width: 100%;">
+    <tr>
+        
+        <td class="sec-table" style="padding: 0 rem;">
+            <table style="width: 100%;" class="  table-bordered">
+                <h5 style="text-align: center;">Component Details</h5>
+                <thead>
+                    
+                    <tr>
+                        <th>Name</th>
+                        <th>Version</th>
+                        <th>Release</th>
+                        <th>Solution</th>
+                        <th>Scan</th>
+                        <th>Project</th>
+                    </tr>
+                </thead>
+                {% for data in datas%}
+                <tr>
+                    
+                    <td>{{data.0}}</td>
+                    <td>7.8.7</td>
+                    <td>2023.1</td>
+                    <td>Apache</td>
+                    <td>2023/8/2</td>
+                    <td>Oracle</td>
+                    
+                </tr>
+                {% endfor %}
+            </table>
+        </td>
+
+
+        <td class="sec-table" style="padding: 0 rem;">
+            <table style="width: 100%;" class="table-bordered">
+                <h5 style="text-align: center;">Security Vulnerability Counts</h5>
+                <thead>
+                    
+                    <tr>
+                        <th>Critical</th>
+                        <th>High</th>
+                        <th>Medium</th>
+                        <th>Low</th>
+                    </tr>
+                </thead>
+                {% for data in datas%}
+                <tr>
+                    <td>{{data.1}}</td>
+                    <td>{{data.2}}</td>
+                    <td>{{data.3}}</td>
+                    <td>{{data.4}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </td>
+    </tr>
+</table>
+
+
+{%endblock %}

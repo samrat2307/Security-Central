@@ -1,0 +1,1262 @@
+{% extends "base.html"%}
+
+{% load static %}
+{% block mycss %}
+<style>
+    .container {
+        max-width: 100%;
+        height: 100%;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+
+
+    .backbtn {
+        margin-top: 20px;
+        margin-left: 20px;
+    }
+
+    .logbut {
+        margin-top: 20px;
+        margin-left: 1150px;
+        /* align-content: flex-end; */
+
+        /* border-radius: 10px; */
+        /* padding: 5px; */
+        /* border: white; */
+        /* background-color: rgb(10, 109, 222); */
+        /* color: white; */
+        /* text-decoration: none; */
+    }
+
+    #text {
+        padding-top: 55px;
+    }
+
+    #mytext {
+        position: static;
+    }
+
+    .navbarcolor {
+        background-color: white !important;
+    }
+
+    .navbar {
+        height: 5px !important;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+
+    .place {
+
+        /* position: absolute; */
+        margin-left: 5px;
+        /* padding-top: 5px; */
+        border-radius: 5px;
+    }
+
+    .sec-table {
+        padding: 0rem !important;
+    }
+
+    table,
+    table td {
+        /* border: 1px solid #cccccc; */
+        border-collapse: collapse;
+    }
+
+    td {
+        height: 30px;
+        width: 1250px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .short {
+        width: 1px !important;
+    }
+</style>
+
+{% endblock %}
+
+
+
+
+{% block content %}
+<button class=" backbtn btn btn-primary" style="text-decoration:none ; "
+    onclick="location.href='{% url 'component'%}' ">Back</button>
+<button class="logbut btn btn-primary" style="text-decoration:none ; "
+    onclick="location.href='{% url 'login_attempt'%}' ">Logout</button>
+<nav class="navbar   justify-content-between navbarcolor">
+    <div id="text">
+
+        <!-- <textarea id="mytext" rows="1" cols="18"></textarea>
+        <span class="place">
+            <select id="dropdown">
+                <option value=""></option>
+                <option value="text1">text1</option>
+                <option value="text2">text2</option>
+                <option value="text3">text3</option>
+                <option value="text4">text4</option>
+            </select>
+        </span> -->
+
+    </div>
+    <!-- <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form> -->
+</nav>
+
+<div class="container">
+    <table id="databasesimple" class="table-bordered" style="width: 100%;border:2px solid black">
+
+        <thead>
+            <tr>
+
+                <th scope="col" colspan="10" class="text-center">Component View</th>
+                <!-- <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Handle</th> -->
+
+            </tr>
+            <tr>
+                <th class="display:inline" scope="col" colspan="10">
+                    <form id="searchForm" class="form-inline my-0 py-3" style="margin-left:70%;">
+                        <input id="searchInput" class="form-control mr-sm-2" type="search" placeholder="Search"
+                            aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </th>
+            </tr>
+
+            <tr>
+
+                <th scope="col" colspan="6"
+                    style="color: white; background-color:darkblue ; justify-content: center; text-align: center;">
+                    Component Details</th>
+                <th scope="col" colspan="4" style="color: white; background-color:orange; text-align: center;">Security
+                    Vulnerability Counts</th>
+                <!-- <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Handle</th> -->
+
+            </tr>
+
+
+        </thead>
+        <tbody>
+            <tr class="stick">
+                <td class="">
+                    <div class="dropdown">
+                        <button class="btn btn dropdown-toggle"
+                            style="background-color:antiquewhite;border:2px solid black;width: 100%;height: 100%; margin-top:0px; "
+                            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            Name
+                        </button>
+                        <div class="dropdown-menu" id="name" aria-labelledby="dropdownMenuButton"
+                            style=" margin-top: 225px; padding:0px">
+                            <!-- <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a> -->
+                            <div class="name-list-container"
+                                style="  max-height: 360px; overflow-y: scroll; margin-bottom: 60px;">
+                                <!-- List of names goes here -->
+                            </div>
+                            <div class="name-list-actions"
+                                style="position: absolute; bottom: 0; left: 0; right: 0; padding: 5px; background-color: #fff;">
+                                <button id="applyBtnName" class="btn btn-primary" onclick="applyFilter('name')"
+                                    style="margin-right: 5px;">Apply</button>
+                                <button id="cancelBtnName" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="dropdown" style="padding:0px">
+                        <button class="btn btn dropdown-toggle"
+                            style="background-color:lightgray;border:2px solid black;width:100%;height: 100%; margin-top: 0px;"
+                            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            Version
+                        </button>
+                        <div class="dropdown-menu" id="version" aria-labelledby="dropdownMenuButton"
+                            style=" margin-top: 225px; padding:0px">
+                            <!-- <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a> -->
+                            <div class="version-list-container"
+                                style="  max-height: 360px; overflow-y: scroll; margin-bottom: 60px;">
+                                <!-- List of names goes here -->
+                            </div>
+                            <div class="version-list-actions"
+                                style="position: absolute; bottom: 0; left: 0; right: 0; padding: 5px; background-color: #fff;">
+                                <button id="applyBtnName" class="btn btn-primary" onclick="applyFilter('version')"
+                                    style="margin-right: 5px;">Apply</button>
+                                <button id="cancelBtnName" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="dropdown" style="padding:0px">
+                        <button class="btn btn dropdown-toggle"
+                            style="background-color:lightblue;border:2px solid black;width: 100%;height: 50%; margin-top: 0px;"
+                            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            Release
+                        </button>
+                        <div class="dropdown-menu" id="release" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="dropdown" style="padding:0px">
+                        <button class="btn btn dropdown-toggle"
+                            style="background-color:lightskyblue;border:2px solid black;width: 100%;height: 50%; margin-top: 0px;"
+                            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            Solution
+                        </button>
+                        <div class="dropdown-menu" id="solution" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="dropdown" style="padding:0px">
+                        <button class="btn btn dropdown-toggle"
+                            style="background-color:lightblue;border:2px solid black;width: 100%;height: 50%; margin-top: 0px;"
+                            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            Scan
+                        </button>
+                        <div class="dropdown-menu" id="scan" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </td>
+                <!-- <th scope="col" colspan="5">Comp</th>
+            <th scope="col" colspan="5">First</th> -->
+                <!-- <th scope="col">Last</th>
+            <th scope="col">Handle</th> -->
+                <!-- <th scope="col" >Comp</th> -->
+                <td>
+                    <div class="dropdown" style="padding:0px">
+                        <button class="btn btn dropdown-toggle"
+                            style="background-color:burlywood;border:2px solid black;width: 100%;height: 100%; margin-top: 0px;"
+                            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            Project
+                        </button>
+                        <div class="dropdown-menu" id="project" aria-labelledby="dropdownMenuButton">
+                            <!-- <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a> -->
+                        </div>
+                    </div>
+                </td>
+                <td class=" w-auto short" style="background-color: red; text-align: center;">Critical</td>
+                <td class=" w-auto short" style="background-color: lightcoral; text-align: center;">High</td>
+                <td class="w-auto short" style="background-color: lightsalmon; text-align: center;">Medium</td>
+                <td class="w-auto short" style="background-color: lightgreen; text-align: center;">Low</td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+
+{%block js%}
+
+<!-- <script src="{% static 'scandetail.js' %}" type="text/javascript">
+</script> -->
+<script type="text/javascript">
+    var showScanDetails;
+    var updateVersionFilter;
+    var updateReleaseFilter;
+    var updateSolutionFilter;
+    var updateScanFilter;
+    var updateProjectFilter;
+    function filterdata(country) {
+        console.log(country);
+        // console.log("hii")
+    }
+    updateReleaseFilter = function () {
+        // console.log("release called");
+        $.ajax({
+            method: 'GET',
+            url: "http://127.0.0.1:8000/ajax/releases",
+            data: {},
+            success: function (result) {
+                // console.log(result);
+                countries_option = "";
+
+                $.each(result["release"], function (a, b) {
+                    // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                    countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="release"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                });
+                countries_option += `<div class="dropdown-item"><button id="applyBtnRelease" class="btn btn-primary" onclick="applyFilter('release')" style="margin-right: 5px;">Apply</button><button id="cancelBtnRelease" class="btn btn-secondary">Cancel</button></div>`;
+                $("#release").html(countries_option)
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        });
+    };
+
+
+
+
+
+
+    // updateVersionFilter = function () {
+    //     $.ajax({
+    //         method: 'GET',
+    //         url: "http://127.0.0.1:8000/ajax/versions",
+    //         data: {},
+    //         success: function (result) {
+
+    //             var selectedVersionFilter = "";
+    //             var names_option = "";
+
+    //             $.each(result["version"], function (a, b) {
+    //                 // var checked = (b === selectedVersionFilter) ? "checked" : ""; // Check if version matches selectedVersionFilter
+    //                 names_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="version"><label class="form-check-label" for="${b}">${b}</label></div>`;
+    //             });
+    //             $("#version .version-list-container").html(names_option);
+    //         },
+    //         error: function (response) {
+    //             console.log(response)
+    //         }
+    //     });
+    // };
+
+
+    updateVersionFilter = function () {
+        $.ajax({
+            method: 'GET',
+            url: "http://127.0.0.1:8000/ajax/versions",
+            data: {},
+            success: function (result) {
+                var uniqueNames = []; // Array to store unique names
+                var names_option = "";
+
+                $.each(result["version"], function (a, b) {
+                    if (!uniqueNames.includes(b)) { // Check if name is not already present in the array
+                        uniqueNames.push(b); // Add name to the array
+                        names_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="version" data-id="${version}"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                    }
+                });
+
+                $("#version .version-list-container").html(names_option);
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        });
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    updateSolutionFilter = function () {
+        $.ajax({
+            method: 'GET',
+            url: "http://127.0.0.1:8000/sol",
+            data: {},
+            success: function (result) {
+                // console.log(result);
+                countries_option = "";
+
+                $.each(result["solution"], function (a, b) {
+                    // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                    countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="solution"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                });
+                countries_option += `<div class="dropdown-item"><button id="applyBtnSolution" class="btn btn-primary" onclick="applyFilter('solution')" style="margin-right: 5px;">Apply</button><button id="cancelBtnSolution" class="btn btn-secondary">Cancel</button></div>`;
+                $("#solution").html(countries_option)
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        });
+    };
+
+
+    updateScanFilter = function () {
+        $.ajax({
+            method: 'GET',
+            url: "http://127.0.0.1:8000/ajax/scans",
+            data: {},
+            success: function (result) {
+                // console.log(result);
+                countries_option = "";
+
+                $.each(result["scan"], function (a, b) {
+                    // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                    countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="scan"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                });
+                countries_option += `<div class="dropdown-item"><button id="applyBtnScan" class="btn btn-primary" onclick="applyFilter('scan')" style="margin-right: 5px;">Apply</button><button id="cancelBtnScan" class="btn btn-secondary">Cancel</button></div>`;
+                $("#scan").html(countries_option)
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        });
+    };
+
+
+
+    updateProjectFilter = function () {
+        $.ajax({
+            method: 'GET',
+            url: "http://127.0.0.1:8000/ajax/projects",
+            data: {},
+            success: function (result) {
+                // console.log(result);
+                countries_option = "";
+
+                $.each(result["project"], function (a, b) {
+                    // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                    // countries_option += `<a class="dropdown-item country-link" onclick="filterdata('${b}','project')" id="${b}" >${b}</a>`;
+                    countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="project"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                });
+                countries_option += `<div class="dropdown-item"><button id="applyBtnProject" class="btn btn-primary" onclick="applyFilter('project')" style="margin-right: 5px;">Apply</button><button id="cancelBtnProject" class="btn btn-secondary">Cancel</button></div>`;
+
+                $("#project").html(countries_option)
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        });
+    };
+
+
+    showScanDetails = function () {
+        $.ajax({
+            url: "http://127.0.0.1:8000/ajax/components/viewstatus",
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // console.log(data);
+                // 'data' contains the list of dictionaries as JSON data
+                // Process the data and create table rows dynamically
+                var tableBody = $('#databasesimple'); // Get the table body element by ID
+                // Loop through the data and create table rows
+                for (var i = 0; i < data.length; i++) {
+                    var row = '<tr>' +
+                        '<td>' + data[i].component_name + '</td>' +
+                        '<td>' + data[i].component_version + '</td>' +
+                        '<td>' + data[i].release_name + '</td>' +
+                        '<td>' + data[i].solution_name + '</td>' +
+                        '<td>' + data[i].scan_datetime + '</td>' +
+                        '<td>' + data[i].project_name + '</td>' +
+                        '<td>' + data[i].critical_count + '</td>' +
+                        '<td>' + data[i].high_count + '</td>' +
+                        '<td>' + data[i].medium_count + '</td>' +
+                        '<td>' + data[i].low_count + '</td>' +
+                        '</tr>';
+                    tableBody.append(row); // Append the row to the table body
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+            }
+        });
+    };
+
+    $(document).ready(function () {
+        localStorage.clear();
+        showScanDetails();
+        updateReleaseFilter();
+        updateVersionFilter();
+        updateSolutionFilter();
+        updateScanFilter();
+        updateProjectFilter();
+
+
+        // To retrieve all names
+        $.ajax({
+            method: 'GET',
+            url: "http://127.0.0.1:8000/ajax/names",
+            data: {},
+            success: function (result) {
+                var uniqueNames = []; // Array to store unique names
+                var names_option = "";
+
+                $.each(result["name"], function (a, b) {
+                    if (!uniqueNames.includes(b)) { // Check if name is not already present in the array
+                        uniqueNames.push(b); // Add name to the array
+                        names_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="name"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                    }
+                });
+
+                $("#name .name-list-container").html(names_option);
+                $(".form-check-input[data-type='name']").on("change", function () {
+                    versionFilters = []; // Empty the versionFilters array
+                });
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        });
+
+    });
+
+
+    // // Function to apply filters on data
+    // function filterdata(value, filter_type) {
+    //     $.ajax({
+    //         method: 'GET',
+    //         url: "http://127.0.0.1:8000/filterscandetails",
+    //         data: {
+    //             solution: filter_type == 'solution' ? value : $('#solution').val(),
+    //             project: filter_type == 'project' ? value : $('#project').val(),
+    //             version: filter_type == 'version' ? value : $('#version').val(),
+    //             release: filter_type == 'release' ? value : $('#release').val(),
+    //             version: filter_type == 'scan' ? value : $('#scan').val(),
+    //             version: filter_type == 'name' ? value : $('#name').val(),
+    //         },
+    //         success: function (result) {
+    //             console.log(result);
+    //             // code to display data on the webpage
+    //         },
+    //         error: function (response) {
+    //             console.log(response)
+    //         }
+    //     });
+    // }
+
+    // $("#applyBtnProject").on("click", function () {
+    //     var selectedProjects = []; // Array to store selected project names
+
+    //     // Loop through all checkboxes
+    //     $("input[type='checkbox']").each(function () {
+    //         if ($(this).is(":checked")) { // Check if checkbox is checked
+    //             selectedProjects.push($(this).val()); // Add checked project name to the array
+    //         }
+    //     });
+
+    //     // Display selected project names
+    //     console.log("Selected Projects: ", selectedProjects);
+    // });
+
+
+    // // This is external aading to the code which is not functional
+    // // Apply button click event handler
+    // $('.apply-filter-btn').click(function () {
+    //     var filterType = $(this).attr('id').replace('applyBtn', ''); // Get the filter type
+    //     var selectedFilters = [];
+
+    //     // Get the selected filter values for the corresponding filter type
+    //     $('#' + filterType + ' input[type="checkbox"]:checked').each(function () {
+    //         selectedFilters.push($(this).val());
+    //     });
+
+    //     // Call the applyFilter function with the selected filter values
+    //     applyFilter(filterType, selectedFilters);
+    // });
+
+    // // Cancel button click event handler
+    // $('.cancel-filter-btn').click(function () {
+    //     var filterType = $(this).attr('id').replace('cancelBtn', ''); // Get the filter type
+
+    //     // Clear the selected checkboxes for the corresponding filter type
+    //     $('#' + filterType + ' input[type="checkbox"]').prop('checked', false);
+
+    //     // Call the applyFilter function without any selected filters
+    //     applyFilter(filterType, []);
+    // });
+
+    // // 
+
+
+
+
+
+
+
+    // function getFilteredVersions(nameFilters) {
+    //     $.ajax({
+    //         method: 'POST',
+    //         url: "http://127.0.0.1:8000/ajax/filtered-versions",
+    //         data: { nameFilters: nameFilters },
+    //         success: function (result) {
+    //             var versions = result["version"];
+    //             updateVersionFilterOptions(versions);
+    //         },
+    //         error: function (response) {
+    //             console.log(response);
+    //         }
+    //     });
+    // }
+function select(selectedCheckboxes){
+    selectedCheckboxes.forEach(function (checkbox) {
+    // Get the checkbox value and type
+    checkboxValue = checkbox.value;
+    checkboxType = checkbox.type;
+        console.log("Selctions calles");
+        console.log(checkboxType);
+    // Update the corresponding checkbox element to appear as checked
+    $(".form-check-input[data-type='" + checkboxType + "'][value='" + checkboxValue + "']").prop("checked", true);
+});
+}
+
+
+
+
+    // var selectedCheckboxes = [];
+
+    function applyFilter(type) {
+
+        var checkboxValue;
+        var checkboxType;
+
+        // Retrieve the existing selectedCheckboxes array from localStorage
+        var storedSelectedCheckboxes = localStorage.getItem("selectedCheckboxes");
+        var selectedCheckboxes = [];
+
+        if (storedSelectedCheckboxes) {
+            selectedCheckboxes = JSON.parse(storedSelectedCheckboxes);
+        }
+
+        // Remove the previous filter values of the given type from selectedCheckboxes
+        selectedCheckboxes = selectedCheckboxes.filter(function (checkbox) {
+            return checkbox.type !== type;
+        });
+        select(selectedCheckboxes);
+        // Iterate through the currently selected checkboxes of the given type and add them to selectedCheckboxes
+        $(".form-check-input:checked[data-type='" + type + "']").each(function () {
+            checkboxValue = $(this).val();
+            checkboxType = $(this).data('type');
+            selectedCheckboxes.push({
+                type: checkboxType,
+                value: checkboxValue
+            });
+        });
+
+        // Store the updated selectedCheckboxes array in localStorage
+        localStorage.setItem("selectedCheckboxes", JSON.stringify(selectedCheckboxes));
+
+        // Prepare the data object to be sent via AJAX
+        var requestData = {
+            'selectedCheckboxes': selectedCheckboxes
+        };
+        console.log("printing after new")
+        console.log(requestData);
+
+        // Initialize requestData object
+        var requestData = {
+            nameFilters: [],
+            versionFilters: [],
+            releaseFilters: [],
+            solutionFilters: [],
+            scanFilters: [],
+            projectFilters: []
+        };
+
+        // Categorize the selected checkboxes into requestData
+        selectedCheckboxes.forEach(function (checkbox) {
+            switch (checkbox.type) {
+                case 'project':
+                    requestData.projectFilters.push(checkbox.value);
+                    break;
+                case 'name':
+                    requestData.nameFilters.push(checkbox.value);
+                    break;
+                case 'solution':
+                    requestData.solutionFilters.push(checkbox.value);
+                    break;
+                case 'release':
+                    requestData.releaseFilters.push(checkbox.value);
+                    break;
+                case 'version':
+                    requestData.versionFilters.push(checkbox.value);
+                    break;
+                case 'scan':
+                    requestData.scanFilters.push(checkbox.value);
+                    break;
+                default:
+                    // Handle unknown checkbox types, if needed
+                    break;
+            }
+        });
+        console.log("below requestdata print veriosn");
+        console.log(requestData.versionFilters);
+
+        // var tr = [requestData.versionFilters];
+        // console.log("Tr");
+        // console.log(tr);
+
+        var projectFilters = requestData.projectFilters;
+        var versionFilters =requestData.versionFilters;
+        var nameFilters = requestData.nameFilters;
+        var solutionFilters = requestData.solutionFilters;
+        var releaseFilters = requestData.releaseFilters;
+        var scanFilters = requestData.scanFilters;
+
+
+
+
+
+
+
+
+
+
+
+
+        // -------------------------->>>>>>>>>>>>>
+
+
+        // var projectFilters = [];
+        // var versionFilters = [];
+        // var nameFilters = [];
+        // var solutionFilters = [];
+        // var releaseFilters = [];
+        // var scanFilters = [];
+        // var checkboxValue;
+        // Iterate through all checkboxes and categorize them based on their type
+
+        // $(".form-check-input:checked").each(function () {
+
+
+        //     checkboxValue = $(this).val()
+        //     checkboxType = $(this).data('type');
+
+        //     switch (checkboxType) {
+        //         case 'project':
+        //             projectFilters.push(checkboxValue);
+        //             break;
+        //         case 'name':
+        //             nameFilters.push(checkboxValue);
+        //             break;
+        //         case 'solution':
+        //             solutionFilters.push(checkboxValue);
+        //             break;
+        //         case 'release':
+        //             releaseFilters.push(checkboxValue);
+        //             break;
+        //         case 'version':
+
+        //             versionFilters.push(checkboxValue);
+        //             break;
+        //         case 'scan':
+        //             scanFilters.push(checkboxValue);
+        //             break;
+        //         default:
+        //             // Handle unknown checkbox types, if needed
+        //             break;
+        //     }
+        //     console.log(checkboxType);
+
+        //     var isDuplicate = false;
+
+        //     // Check if the selected checkbox is already in the array
+        //     for (var i = 0; i < selectedCheckboxes.length; i++) {
+        //         if (selectedCheckboxes[i].type === checkboxType && selectedCheckboxes[i].value === checkboxValue) {
+        //             isDuplicate = true;
+        //             break;
+        //         }
+        //     }
+
+        //     // Push the selected checkbox to the array if it's not a duplicate
+        //     if (!isDuplicate) {
+        //         selectedCheckboxes.push({
+        //             type: checkboxType,
+        //             value: checkboxValue
+        //         });
+        //     }
+
+        // });
+
+
+        // console.log("Orintinting through the filter");
+        // console.log(projectFilters);
+        // console.log(nameFilters);
+        // console.log(solutionFilters);
+        // console.log(releaseFilters);
+        // console.log(versionFilters);
+        // console.log(scanFilters);
+        // console.log("Selected checkboxes");
+        // console.log(selectedCheckboxes);
+
+
+        // if (nameFilters.length === 0 ) {
+        //     showScanDetails();
+        // }
+
+        localStorage.setItem("selectedCheckboxes", JSON.stringify(selectedCheckboxes));
+        console.log("loalstorage");
+        console.log(selectedCheckboxes);
+        // localStorage.setItem('versionFilters', JSON.stringify(versionFilters));
+        // var storedVersionFilters = localStorage.getItem('versionFilters');
+        // if (storedVersionFilters) {
+        //     versionFilters = JSON.parse(storedVersionFilters);
+        // }
+        // console.log("abopve local");
+        // for (var i = 0; i < localStorage.length; i++) {
+        //     var key = localStorage.key(i);
+        //     var value = localStorage.getItem(key);
+        //     console.log("IN local");
+        //     console.log(key + ': ' + value);
+        // }
+
+
+
+        // Send the selected checkboxes and all filters data to views.py via an AJAX request
+        // var requestData = {
+        //     'nameFilters': nameFilters,
+        //     'versionFilters': versionFilters,
+        //     'releaseFilters': releaseFilters,
+        //     'solutionFilters': solutionFilters,
+        //     'scanFilters': scanFilters,
+        //     'projectFilters': projectFilters
+        //     // 'selectedCheckboxes': selectedCheckboxes,
+        // };
+
+        console.log(nameFilters);
+        console.log("Printing above the post");
+        $.ajax({
+            url: "http://127.0.0.1:8000/filterscandetails",
+            type: 'POST',
+            data: {
+                'projectFilters': projectFilters,
+                'nameFilters': nameFilters,
+                'solutionFilters': solutionFilters,
+                'releaseFilters': releaseFilters,
+                'versionFilters': versionFilters,
+                'scanFilters': scanFilters,
+                'csrfmiddlewaretoken': csrftoken
+            },
+            beforeSend: function (xhr, settings) {
+                // Set the CSRF token in the request headers
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            success: function (data) {
+
+                console.log("Reply received");
+
+                // console.log(data.projects);
+                var filteredscans = data.filteredscan;
+                // Use scanDetailsJson as needed
+                console.log("Fiteredscans");
+                console.log(filteredscans);
+
+
+                //Versions code
+                var versions = data.versions; // Extract the versions from the JSON response
+                if (data.versions.length > 0) {
+                    var uniqueVersions = [];
+
+                    var selectedVersionFilter = "";
+
+                    // Clear the existing options in the dropdown
+                    $("#version .version-list-container").empty();
+                    // Generate the new options based on the versions
+
+                    $.each(versions, function (index, version) {
+
+                        if (!uniqueVersions.includes(version)) { // Check if project name is not already present in the array
+
+                            uniqueVersions.push(version);
+                            var option = `<div class="form-check" style="margin-left: 5px;">
+                    <input class="form-check-input" type="checkbox" value="${version}" id="${version}" data-type="version">
+                    <label class="form-check-label" for="${version}">${version}</label>
+                  </div>`;
+
+
+                            // var option = $('<div class="form-check" style="margin-left: 5px;">')
+                            //     .append($('<input class="form-check-input" type="checkbox" data-type="version">')
+                            //         .attr('value', version)
+                            //         .attr('id', version)
+                            //         .prop('checked', version === selectedVersionFilter)) // Check if version matches selectedVersionFilter
+                            //     .append($('<label class="form-check-label">')
+                            //         .attr('for', version)
+                            //         .text(version));
+
+
+                            $("#version .version-list-container").append(option);
+                        }
+                    });
+                }
+                else {
+                    updateVersionFilter();
+                }
+
+                //Releases code
+                var releases = data.releases;
+                if (data.releases.length > 0) {
+                    var uniqueReleases = [];
+                    countries_option = "";
+
+                    $.each(releases, function (a, b) {
+                        if (!uniqueReleases.includes(b)) { // Check if project name is not already present in the array
+                            uniqueReleases.push(b);
+                            // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                            countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="release"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                        }
+                    });
+                    countries_option += `<div class="dropdown-item"><button id="applyBtnRelease" class="btn btn-primary" onclick="applyFilter('release')" style="margin-right: 5px;">Apply</button><button id="cancelBtnRelease" class="btn btn-secondary">Cancel</button></div>`;
+                    $("#release").html(countries_option)
+                }
+                else {
+                    updateReleaseFilter();
+                }
+
+
+                //Solution code
+                var solutions = data.solutions;
+                if (data.solutions.length > 0) {
+                    var uniqueSolutions = [];
+                    countries_option = "";
+
+                    $.each(solutions, function (a, b) {
+                        if (!uniqueSolutions.includes(b)) { // Check if project name is not already present in the array
+                            uniqueSolutions.push(b);
+                            // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                            countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="solution"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                        }
+                    });
+                    countries_option += `<div class="dropdown-item"><button id="applyBtnSolution" class="btn btn-primary" onclick="applyFilter('solution')" style="margin-right: 5px;">Apply</button><button id="cancelBtnSolution" class="btn btn-secondary">Cancel</button></div>`;
+                    $("#solution").html(countries_option)
+                }
+                else {
+                    updateSolutionFilter();
+                }
+
+                //Scan code
+                var scans = data.scans;
+                if (data.scans.length > 0) {
+                    var uniqueScans = [];
+                    countries_option = "";
+
+                    $.each(scans, function (a, b) {
+                        if (!uniqueScans.includes(b)) { // Check if project name is not already present in the array
+                            uniqueScans.push(b);
+                            // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                            countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="scan"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                        }
+                    });
+                    countries_option += `<div class="dropdown-item"><button id="applyBtnScan" class="btn btn-primary" onclick="applyFilter('scan')" style="margin-right: 5px;">Apply</button><button id="cancelBtnScan" class="btn btn-secondary">Cancel</button></div>`;
+                    $("#scan").html(countries_option)
+                }
+                else {
+                    updateScanFilter();
+                }
+
+
+                //Project code
+                var projects = data.projects;
+                if (data.projects.length > 0) {
+                    var uniqueProjects = [];
+                    countries_option = "";
+
+                    $.each(projects, function (a, b) {
+                        if (!uniqueProjects.includes(b)) { // Check if project name is not already present in the array
+                            uniqueProjects.push(b); // Add project name to the array
+                            // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                            // countries_option += `<a class="dropdown-item country-link" onclick="filterdata('${b}','project')" id="${b}" >${b}</a>`;
+                            countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="project"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                        }
+                    });
+                    countries_option += `<div class="dropdown-item"><button id="applyBtnProject" class="btn btn-primary" onclick="applyFilter('project')" style="margin-right: 5px;">Apply</button><button id="cancelBtnProject" class="btn btn-secondary">Cancel</button></div>`;
+
+                    $("#project").html(countries_option)
+                }
+                else {
+                    updateProjectFilter();
+                }
+
+
+
+
+
+                //Updated rows after filtering
+                var tableBody = $('#databasesimple'); // Get the table body element by ID
+                // if (tableBody.length) {
+                // tableBody.empty();
+                console.log("TRGT3");
+                tableBody.find('tr:gt(3)').remove();
+                // Loop through the data and create table rows
+                for (var i = 0; i < filteredscans.length; i++) {
+                    var row = '<tr>' +
+                        '<td>' + filteredscans[i].component_name + '</td>' +
+                        '<td>' + filteredscans[i].component_version + '</td>' +
+                        '<td>' + filteredscans[i].release_name + '</td>' +
+                        '<td>' + filteredscans[i].solution_name + '</td>' +
+                        '<td>' + filteredscans[i].scan_datetime + '</td>' +
+                        '<td>' + filteredscans[i].project_name + '</td>' +
+                        '<td>' + filteredscans[i].critical_count + '</td>' +
+                        '<td>' + filteredscans[i].high_count + '</td>' +
+                        '<td>' + filteredscans[i].medium_count + '</td>' +
+                        '<td>' + filteredscans[i].low_count + '</td>' +
+                        '</tr>';
+                    tableBody.append(row); // Append the row to the table body
+                }
+            },
+
+            error: function (response) {
+                console.log(response);
+            }
+
+        });
+
+    }
+
+
+
+
+    // Get the search form and input elements by ID
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+    // Attach a submit event handler to the search form
+    var searchForm = $('#searchForm');
+    var searchInput = $('#searchInput');
+    var csrftoken = getCookie('csrftoken');
+    searchForm.submit(function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+        var searchTerm = searchInput.val();
+        console.log(csrftoken);
+        console.log(searchTerm);// Get the search term entered by the user
+
+        // Send an AJAX request with the search term as a query parameter
+        $.ajax({
+            url: "http://127.0.0.1:8000/ajax/searchrecords",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'search': searchTerm,
+                'csrfmiddlewaretoken': csrftoken  // Include the CSRF token
+            },
+            beforeSend: function (xhr, settings) {
+                // Set the CSRF token in the request headers
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            success: function (data) {
+                var filteredscans = data.filteredscan;
+                console.log("Printname");
+                // console.log(names);
+                // console.log(data);
+
+                //For names
+
+                var names = data.names;
+                if (data.names.length > 0) {
+                    var uniqueNames = [];
+                    countries_option = "";
+
+                    $.each(names, function (a, b) {
+                        if (!uniqueNames.includes(b)) { // Check if name is not already present in the array
+                            uniqueNames.push(b); // Add name to the array
+                            countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="name"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                        }
+                    });
+
+                    $("#name .name-list-container").html(countries_option);
+                }
+                else {
+                    updateVersionFilter();
+                }
+
+
+
+
+                var versions = data.versions; // Extract the versions from the JSON response
+                if (data.versions.length > 0) {
+                    var uniqueVersions = [];
+                    var selectedVersionFilter = "";
+                    // Clear the existing options in the dropdown
+                    $("#version .version-list-container").empty();
+                    // Generate the new options based on the versions
+                    $.each(versions, function (index, version) {
+                        if (!uniqueVersions.includes(version)) { // Check if project name is not already present in the array
+                            var checked = (version === selectedVersionFilter) ? "checked" : ""; // Check if version matches selectedVersionFilter
+                            uniqueVersions.push(version);
+                            var option = `<div class="form-check" style="margin-left: 5px;">
+                    <input class="form-check-input" type="checkbox" value="${version}" id="${version}" data-type="version">
+                    <label class="form-check-label" for="${version}">${version}</label>
+                  </div>`;
+
+
+                            // var option = $('<div class="form-check" style="margin-left: 5px;">')
+                            //     .append($('<input class="form-check-input" type="checkbox" data-type="version">')
+                            //         .attr('value', version)
+                            //         .attr('id', version)
+                            //         .prop('checked', version === selectedVersionFilter)) // Check if version matches selectedVersionFilter
+                            //     .append($('<label class="form-check-label">')
+                            //         .attr('for', version)
+                            //         .text(version));
+
+
+                            $("#version .version-list-container").append(option);
+                        }
+                    });
+                }
+                else {
+                    updateVersionFilter();
+                }
+
+                //Releases code
+                var releases = data.releases;
+                if (data.releases.length > 0) {
+                    var uniqueReleases = [];
+                    countries_option = "";
+
+                    $.each(releases, function (a, b) {
+                        if (!uniqueReleases.includes(b)) { // Check if project name is not already present in the array
+                            uniqueReleases.push(b);
+                            // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                            countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="release"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                        }
+                    });
+                    countries_option += `<div class="dropdown-item"><button id="applyBtnRelease" class="btn btn-primary" onclick="applyFilter('release')" style="margin-right: 5px;">Apply</button><button id="cancelBtnRelease" class="btn btn-secondary">Cancel</button></div>`;
+                    $("#release").html(countries_option)
+                }
+                else {
+                    updateReleaseFilter();
+                }
+
+
+                //Solution code
+                var solutions = data.solutions;
+                if (data.solutions.length > 0) {
+                    var uniqueSolutions = [];
+                    countries_option = "";
+
+                    $.each(solutions, function (a, b) {
+                        if (!uniqueSolutions.includes(b)) { // Check if project name is not already present in the array
+                            uniqueSolutions.push(b);
+                            // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                            countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="solution"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                        }
+                    });
+                    countries_option += `<div class="dropdown-item"><button id="applyBtnSolution" class="btn btn-primary" onclick="applyFilter('solution')" style="margin-right: 5px;">Apply</button><button id="cancelBtnSolution" class="btn btn-secondary">Cancel</button></div>`;
+                    $("#solution").html(countries_option)
+                }
+                else {
+                    updateSolutionFilter();
+                }
+
+                //Scan code
+                var scans = data.scans;
+                if (data.scans.length > 0) {
+                    var uniqueScans = [];
+                    countries_option = "";
+
+                    $.each(scans, function (a, b) {
+                        if (!uniqueScans.includes(b)) { // Check if project name is not already present in the array
+                            uniqueScans.push(b);
+                            // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                            countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="scan"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                        }
+                    });
+                    countries_option += `<div class="dropdown-item"><button id="applyBtnScan" class="btn btn-primary" onclick="applyFilter('scan')" style="margin-right: 5px;">Apply</button><button id="cancelBtnScan" class="btn btn-secondary">Cancel</button></div>`;
+                    $("#scan").html(countries_option)
+                }
+                else {
+                    updateScanFilter();
+                }
+
+
+                //Project code
+                var projects = data.projects;
+                if (data.projects.length > 0) {
+                    var uniqueProjects = [];
+                    countries_option = "";
+
+                    $.each(projects, function (a, b) {
+                        if (!uniqueProjects.includes(b)) { // Check if project name is not already present in the array
+                            uniqueProjects.push(b); // Add project name to the array
+                            // countries_option += `<a class="dropdown-item country-link" id="${b}" >` + b + "</a>"
+                            // countries_option += `<a class="dropdown-item country-link" onclick="filterdata('${b}','project')" id="${b}" >${b}</a>`;
+                            countries_option += `<div class="form-check" style="margin-left: 5px;"><input class="form-check-input" type="checkbox" value="${b}" id="${b}" data-type="project"><label class="form-check-label" for="${b}">${b}</label></div>`;
+                        }
+                    });
+                    countries_option += `<div class="dropdown-item"><button id="applyBtnProject" class="btn btn-primary" onclick="applyFilter('project')" style="margin-right: 5px;">Apply</button><button id="cancelBtnProject" class="btn btn-secondary">Cancel</button></div>`;
+
+                    $("#project").html(countries_option)
+                }
+                else {
+                    updateProjectFilter();
+                }
+
+                // 'data' contains the list of dictionaries as JSON data
+                // Clear the table body before adding new rows
+                if (filteredscans == 0) {
+                    var tableBody = $('#databasesimple');
+                    tableBody.find('tr:gt(3)').remove();
+                    console.log("No data to show");
+                    // tableBody.empty().append("No records Found");
+                    tableBody.html('<tr><td colspan="10" style="margin-top: 0px;">No records found</td></tr>');
+                }
+                var tableBody = $('#databasesimple');
+                tableBody.find('tr:gt(3)').remove();
+
+                // Loop through the data and create table rows
+                for (var i = 0; i < filteredscans.length; i++) {
+                    var row = '<tr>' +
+                        '<td>' + filteredscans[i].component_name + '</td>' +
+                        '<td>' + filteredscans[i].component_version + '</td>' +
+                        '<td>' + filteredscans[i].release_name + '</td>' +
+                        '<td>' + filteredscans[i].solution_name + '</td>' +
+                        '<td>' + filteredscans[i].scan_datetime + '</td>' +
+                        '<td>' + filteredscans[i].project_name + '</td>' +
+                        '<td>' + filteredscans[i].critical_count + '</td>' +
+                        '<td>' + filteredscans[i].high_count + '</td>' +
+                        '<td>' + filteredscans[i].medium_count + '</td>' +
+                        '<td>' + filteredscans[i].low_count + '</td>' +
+                        '</tr>';
+                    tableBody.append(row); // Append the row to the table body
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+            }
+        });
+    });
+
+</script>
+{%endblock%}
+
+{%endblock %}

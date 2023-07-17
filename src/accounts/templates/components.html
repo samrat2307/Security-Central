@@ -1,0 +1,86 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block mycss %}
+
+<style>
+  .main {
+    background-image: url({% static 'nice.jpeg' %});
+  } 
+
+  h2 {
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  .logbut {
+    margin-top: 20px;
+    margin-left: 1150px;
+    /* align-content: flex-end; */
+
+    /* border-radius: 10px; */
+    /* padding: 5px; */
+    /* border: white; */
+    /* background-color: rgb(10, 109, 222); */
+    /* color: white; */
+    /* text-decoration: none; */
+  }
+
+  .top1 {
+    width: 50%;
+    height: 300px;
+    transform: translate(50%, 50%);
+    margin-top: 0px;
+    background-color: rgb(240, 245, 247);
+    border: 3px solid black;
+    border-radius: 10px;
+    padding: 30px;
+  }
+
+  .but {
+    font-family: 'Open Sans', sans-serif;
+    margin: 15px;
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    /* border-color: black; */
+    background-color: rgb(71, 219, 12);
+  }
+
+  a:hover .but {
+    background: rgb(105, 181, 211);
+    transform: scale(1.1);
+  }
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="main">
+
+  <button class="logbut btn btn-primary" style="text-decoration:none ; "
+    onclick="location.href='{% url 'login_attempt'%}' ">Logout</button>
+  <div class="card text-center top1">
+    <div class="card-body">
+      <h2 class="card-title">Work On</h2>
+      <div>
+        <a href="{% url 'solutionproject' %}">
+          <button class="but btn btn-primary">Management</button>
+        </a>
+      </div>
+      <div>
+        <a href="{% url 'showscandetail' %}">
+          <button class="but btn btn-primary">View Status</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{%block js%}
+<script>
+ 
+</script>
+{%endblock%}
+
+{%endblock%}

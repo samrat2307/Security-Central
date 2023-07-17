@@ -1,0 +1,93 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block mycss %}
+
+<style>
+  /* .main {
+    background-image: url({% static 'back.jpg' %});
+  } */
+
+
+  h2 {
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  .backbtn {
+    margin-top: 20px;
+    margin-left: 20px;
+  }
+
+  .logbut {
+    margin-top: 20px;
+    margin-left: 1150px;
+    /* align-content: flex-end; */
+
+    /* border-radius: 10px; */
+    /* padding: 5px; */
+    /* border: white; */
+    /* background-color: rgb(10, 109, 222); */
+    /* color: white; */
+    /* text-decoration: none; */
+  }
+
+  .top1 {
+    width: 50%;
+    height: 350px;
+    transform: translate(50%, 50%);
+    margin-top: 0px;
+    /* background-color: rgb(151, 207, 214); */
+    background-color: rgb(240, 245, 247);
+    border: 3px solid rgb(219, 230, 66);
+    border-radius: 5px;
+    padding: 20px;
+  }
+
+  .but {
+    font-family: 'Open Sans', sans-serif;
+    margin: 15px;
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: rgb(32, 32, 224);
+  }
+
+  a:hover .but {
+    background: rgb(105, 181, 211);
+    transform: scale(1.1);
+  }
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="main">
+  <button class=" backbtn btn btn-primary" style="text-decoration:none ; "
+    onclick="location.href='{% url 'component'%}' ">Back</button>
+  <button class="logbut btn btn-primary" style="text-decoration:none ; "
+    onclick="location.href='{% url 'login_attempt'%}' ">Logout</button>
+  <div class="card text-center top1">
+    <div class="card-body">
+      <h2 class="card-title">GO TO</h2>
+      <div>
+        <a href="{% url 'solution' %}">
+          <button class="but btn btn-primary">Solutions</button>
+        </a>
+      </div>
+      <div>
+        <a href="{% url 'project' %}">
+          <button class="but btn btn-primary">Projects</button>
+        </a>
+      </div>
+      <div>
+        <a href="{% url 'release' %}">
+          <button class="but btn btn-primary">Release</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%endblock%}
